@@ -69,6 +69,10 @@ void convert_dataset(const string& input_folder, const string& output_folder,
   }
   txn->Commit();
   train_db->Close();
+  //aki_update_start
+  std::string label_file="label_test_file";
+  std::ofstream out_stream(label_file.c_str());
+  //aki_update_end
 
   LOG(INFO) << "Writing Testing data";
   scoped_ptr<db::DB> test_db(db::GetDB(db_type));
@@ -81,12 +85,14 @@ void convert_dataset(const string& input_folder, const string& output_folder,
   for (int itemid = 0; itemid < kCIFARBatchSize; ++itemid) {
     read_image(&data_file, &label, str_buffer);
     datum.set_label(label);
+    out_stream<<label<<" ";//aki_update
     datum.set_data(str_buffer, kCIFARImageNBytes);
     int length = snprintf(str_buffer, kCIFARImageNBytes, "%05d", itemid);
     string out;
     CHECK(datum.SerializeToString(&out));
     txn->Put(string(str_buffer, length), out);
   }
+  out_stream.close();//aki_update
   txn->Commit();
   test_db->Close();
 }

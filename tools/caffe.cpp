@@ -9,9 +9,11 @@ namespace bp = boost::python;
 #include <map>
 #include <string>
 #include <vector>
+#include <fstream>//aki_update
 
 #include "boost/algorithm/string.hpp"
 #include "caffe/caffe.hpp"
+#include "caffe/util/math_functions.hpp"//aki_update
 
 using caffe::Blob;
 using caffe::Caffe;
@@ -35,6 +37,15 @@ DEFINE_string(weights, "",
     "Cannot be set simultaneously with snapshot.");
 DEFINE_int32(iterations, 50,
     "The number of iterations to run.");
+//aki_update_start
+//these are flags which are needed in multi-view test
+DEFINE_int32(class_num, 0,
+    "The number of class to write to outfile");
+DEFINE_string(outfile_name, "",
+    "The name output file");
+DEFINE_string(use_mirror, "",
+    "use mirror or not in multiview");
+//aki_update_start
 
 // A simple registry for caffe commands.
 typedef int (*BrewFunction)();
@@ -294,6 +305,167 @@ int time() {
   return 0;
 }
 RegisterBrewFunction(time);
+
+// Multi View Test: score a model like cuda-convnet
+int multi_view_test() {
+  CHECK_GT(FLAGS_model.size(), 0) << "Need a _train_test.prototxt file to define model. use --model= ";
+  CHECK_GT(FLAGS_weights.size(), 0) << "Need a _iter_XXX.caffemodel to set weight. use --weights= ";
+  CHECK_GT(FLAGS_class_num, 0) << "Need the number of classes. use --class_num= ";
+  CHECK_GT(FLAGS_outfile_name.size(), 0) << "Need the prefix of ouput loss files. use --outfile_name= ";
+
+  // Set device id and mode
+  if (FLAGS_gpu >= 0) {
+    LOG(INFO) << "Use GPU with device ID " << FLAGS_gpu;
+    Caffe::SetDevice(FLAGS_gpu);
+    Caffe::set_mode(Caffe::GPU);
+  } else {
+    LOG(INFO) << "Use CPU.";
+    LOG(INFO) << "It is strongly recommended to use GPU right here.";
+    Caffe::set_mode(Caffe::CPU);
+  }
+  // Instantiate the caffe net.
+  Net<float> caffe_net(FLAGS_model, caffe::TEST);
+  caffe_net.CopyTrainedLayersFrom(FLAGS_weights);
+  LOG(INFO) << "Each run is testing for " << FLAGS_iterations << " iterations.";
+
+
+  //set the view which is needed
+  std::map<int, std::string> view_table;
+  std::map<int ,std::string >::iterator current_view;
+
+  view_table.insert(std::pair<int,std::string>(1,"left_top_corner"));
+  view_table.insert(std::pair<int,std::string>(2,"right_top_corner"));
+  view_table.insert(std::pair<int,std::string>(3,"center"));
+  view_table.insert(std::pair<int,std::string>(4,"left_bot_corner"));
+  view_table.insert(std::pair<int,std::string>(5,"right_bot_corner"));
+  if(FLAGS_use_mirror == "true") {
+    view_table.insert(std::pair<int,std::string>(6,"left_top_corner_m"));
+    view_table.insert(std::pair<int,std::string>(7,"right_top_corner_m"));
+    view_table.insert(std::pair<int,std::string>(8,"center_m"));
+    view_table.insert(std::pair<int,std::string>(9,"left_bot_corner_m"));
+    view_table.insert(std::pair<int,std::string>(10,"right_bot_corner_m"));  
+  }
+  
+  int total_score_num = 0;
+
+  for(current_view=view_table.begin(); current_view!=view_table.end(); current_view++ ){
+
+    vector<Blob<float>* > bottom_vec;
+    vector<int> test_score_output_id;
+    vector<float> test_score;
+    float loss = 0;
+
+    std::ofstream outfile((std::string("outfile_")+FLAGS_outfile_name+"_"+current_view->second).c_str());
+    int index = 0;
+    std::ofstream tmp_cache(std::string("multiview_cache").c_str());
+    tmp_cache << current_view->first;
+    LOG(INFO) <<"Right now, the input sample is transformed as "<<current_view->second;
+    tmp_cache.close();
+
+    for (int i = 0; i < FLAGS_iterations; ++i) {
+      //for each iteration of one batch
+      float iter_loss;
+      const vector<Blob<float>*>& result =
+          caffe_net.Forward(bottom_vec, &iter_loss);
+      loss += iter_loss;
+      int idx = 0;
+      for (int j = 0; j < result.size(); ++j) {
+        //for each input testing picture
+        const float* result_vec = result[j]->cpu_data();
+        for (int k = 0; k < result[j]->count(); ++k, ++idx) {
+          //for each score on one class
+          const float score = result_vec[k];
+          if (i == 0) {
+            test_score.push_back(score);
+            test_score_output_id.push_back(j);
+          } else {
+            test_score[idx] += score;
+          }
+          const std::string& output_name = caffe_net.blob_names()[caffe_net.output_blob_indices()[j]];
+          //The last layer should output the probability distribution of input picture
+          //Mostly, we use the softmax layer.
+          if(output_name == "softmax"){
+            outfile << score << " ";
+            if(current_view==view_table.begin())
+                total_score_num++;
+          }
+          if(output_name == "sigmoid"){
+              outfile << score << " ";
+            if(current_view==view_table.begin())
+                total_score_num++;
+          }
+        }
+      }
+    }
+
+    outfile.close();
+  }
+
+  //Now that all the loss has been saved on the disk, we take them out to caculate the average accuracy
+  float* sum_result;
+  float* sub_result;
+
+  LOG(INFO) <<"For each saved loss file, there are "<<total_score_num<<" scores"<<std::endl;
+  sum_result = (float*)malloc(sizeof(float)*total_score_num);
+  sub_result = (float*)malloc(sizeof(float)*total_score_num);
+  
+  //read and add the scores
+  for(current_view=view_table.begin(); current_view!=view_table.end(); current_view++ )
+  {
+    std::ifstream infile((std::string("outfile_")+FLAGS_outfile_name+"_"+current_view->second).c_str());
+    if(current_view==view_table.begin()){
+      //As the first file, we directly read&write the scores to the float array which saves the sum of score
+      for(int i=0; i < total_score_num; ++i)
+        infile >> sum_result[i];
+    }
+    else{
+      //As the rest files, their scores is read&write to sub_result and added to the sum_result
+      for(int i=0; i < total_score_num; ++i)
+        infile >> sub_result[i];
+      caffe::caffe_axpy(total_score_num, (float)1.0,(const float*)sub_result,(float*)sum_result);
+    }
+  }
+  delete(sub_result);
+  //now we need to caculate the accuracy, noted that the correct label is save in label_test_file
+  int* correct_labels;
+  int test_sample_num = total_score_num / FLAGS_class_num;
+  int correct_count = 0;
+
+  //read in the origin labels
+  correct_labels = (int *)malloc(sizeof(int)*test_sample_num);
+  std::ifstream infile(std::string("label_test_file").c_str());
+  for( int i=0; i< test_sample_num; ++i){
+    infile >> correct_labels[i];
+  }
+  LOG(INFO)<<"Load in origin labels.";
+  std::pair<float, int> tmp_decision;
+  for(int i=0; i< test_sample_num; ++i)
+    for(int j=0; j< FLAGS_class_num; ++j){
+      if (j==0){
+        tmp_decision.first = sum_result[i*FLAGS_class_num+j];
+        tmp_decision.second = 0;
+      }
+      if (sum_result[i*FLAGS_class_num+j] > tmp_decision.first) {
+        tmp_decision.first = sum_result[i*FLAGS_class_num+j];
+        tmp_decision.second = j;
+      }
+      if ( j == FLAGS_class_num-1 ){
+        if( tmp_decision.second == correct_labels[i] )
+          correct_count++;
+      }
+    }
+
+  float accuracy = correct_count/(0.0+test_sample_num);
+  LOG(INFO) <<"The averaged accuracy is "<<accuracy;
+
+  delete(sum_result);
+  delete(correct_labels);
+  
+
+  return 0;
+}
+RegisterBrewFunction(multi_view_test);
+
 
 int main(int argc, char** argv) {
   // Print output to stderr (while still logging).

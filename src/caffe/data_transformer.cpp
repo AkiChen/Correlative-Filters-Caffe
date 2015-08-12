@@ -7,6 +7,7 @@
 #include "caffe/util/io.hpp"
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/rng.hpp"
+#include <fstream> //aki_update
 
 namespace caffe {
 
@@ -44,7 +45,7 @@ void DataTransformer<Dtype>::Transform(const Datum& datum,
 
   const int crop_size = param_.crop_size();
   const Dtype scale = param_.scale();
-  const bool do_mirror = param_.mirror() && Rand(2);
+  bool do_mirror = param_.mirror() && Rand(2); //aki_update
   const bool has_mean_file = param_.has_mean_file();
   const bool has_uint8 = data.size() > 0;
   const bool has_mean_values = mean_values_.size() > 0;
@@ -88,6 +89,46 @@ void DataTransformer<Dtype>::Transform(const Datum& datum,
       w_off = (datum_width - crop_size) / 2;
     }
   }
+  //aki_update_start
+  //use the multiview strategy in testing
+  const bool use_multiview = param_.multi_view();
+  if (use_multiview) {
+    std::ifstream in_stream(std::string("multiview_cache").c_str());
+    int view_type = 0;
+    in_stream >> view_type;
+    in_stream.close();
+    if (view_type > 5)
+    {
+      //it means we have to use mirror right here
+      do_mirror = true;
+      view_type-=5;
+    }
+    switch(view_type){
+      case 1:
+        h_off = 0;
+        w_off = 0;
+  break;
+      case 2:
+        h_off = 0;
+        w_off = datum_width - crop_size;
+        break;
+      case 3:
+        h_off = datum_width - crop_size;
+        w_off = 0;
+        break;
+      case 4:
+        h_off = datum_width - crop_size;
+        w_off = datum_width - crop_size;
+        break;
+      case 5:
+        h_off = (datum_height - crop_size) / 2;
+        w_off = (datum_width - crop_size) / 2;
+        break;
+      default:
+        break;
+    }
+  }
+  //aki_update_end
 
   Dtype datum_element;
   int top_index, data_index;
@@ -234,7 +275,7 @@ void DataTransformer<Dtype>::Transform(const cv::Mat& cv_img,
   CHECK(cv_img.depth() == CV_8U) << "Image data type must be unsigned byte";
 
   const Dtype scale = param_.scale();
-  const bool do_mirror = param_.mirror() && Rand(2);
+  bool do_mirror = param_.mirror() && Rand(2);//aki_update
   const bool has_mean_file = param_.has_mean_file();
   const bool has_mean_values = mean_values_.size() > 0;
 
@@ -282,6 +323,47 @@ void DataTransformer<Dtype>::Transform(const cv::Mat& cv_img,
   }
 
   CHECK(cv_cropped_img.data);
+
+  //aki_update_start
+  //use the multiview strategy in testing
+  const bool use_multiview = param_.multi_view();
+  if (use_multiview) {
+    std::ifstream in_stream(std::string("multiview_cache").c_str());
+    int view_type = 0;
+    in_stream >> view_type;
+    in_stream.close();
+    if (view_type > 5)
+    {
+      //it means we have to use mirror right here
+      do_mirror = true;
+      view_type-=5;
+    }
+    switch(view_type){
+      case 1:
+        h_off = 0;
+        w_off = 0;
+        break;
+      case 2:
+        h_off = 0;
+        w_off = img_width - crop_size;
+        break;
+      case 3:
+        h_off = img_width - crop_size;
+        w_off = 0;
+        break;
+      case 4:
+        h_off = img_width - crop_size;
+        w_off = img_width - crop_size;
+        break;
+      case 5:
+        h_off = (img_height - crop_size) / 2;
+        w_off = (img_width - crop_size) / 2;
+        break;
+      default:
+        break;
+    }
+  }
+  //aki_update_end
 
   Dtype* transformed_data = transformed_blob->mutable_cpu_data();
   int top_index;
