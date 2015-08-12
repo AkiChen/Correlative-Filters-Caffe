@@ -1,7 +1,8 @@
-# 123Caffe
+# Multi view test in Caffe
 
-Caffe is a deep learning framework made with expression, speed, and modularity in mind.
-It is developed by the Berkeley Vision and Learning Center ([BVLC](http://bvlc.eecs.berkeley.edu)) and community contributors.
+Caffe is among the best presentations of convolutional nerual networks. Its competiters might be cuda-convnet, torch, theano and so on. I choose caffe to train my models because its excelent speed and 
+
+
 
 Check out the [project site](http://caffe.berkeleyvision.org) for all the details like
 
