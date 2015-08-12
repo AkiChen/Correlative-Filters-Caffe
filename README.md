@@ -4,11 +4,15 @@ Caffe is among the best presentations of convolutional nerual networks. Its comp
 
 But it seems that the multiview(or 10 view) test of network trained with transformed data is currently not available in caffe at all, even though such method of model testing would always achieve a better score as decribed by Alex Krizhevsky in the training strategy of [cuda-convnet](https://code.google.com/p/cuda-convnet/wiki/TrainingNet).
 
-So I wrote a few lines of code to add this function to caffe.
+So a few lines of codes is added to realize such function.
 
 ## What's multiview test
 
-Training a CNN could be very tricky. For example, in the task of image classification, an effective trick is training with transformed data --- in every epoch, each training image only 
+Training a CNN could be very tricky. For example, in the task of object classification, an effective trick is training with transformed data --- in every epoch, each training image only feeds the net with a small patch of itself(which is called cropping) and the patch might also be transformed as its horizontal reflection since objects in the mirror can be easily recogonized by human. Various transformed data helps relieve overfitting during training.
+
+Like 
+
+
 
 
 
