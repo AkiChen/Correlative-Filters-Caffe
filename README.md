@@ -1,6 +1,6 @@
-# Multi view test in Caffe
+# Multi-view test in Caffe
 
-Caffe is among the best presentations of convolutional nerual networks. Its competiters might be cuda-convnet, torch, theano and so on. I choose caffe to train my models because its excelent speed and 
+Caffe is among the best presentations of convolutional nerual networks. Its competiters might be cuda-convnet, torch, theano and so on. I choose caffe to train my models because its elegent design of net-layer-blob structure and the excellent speed of trainning is also impressive.
 
 
 
