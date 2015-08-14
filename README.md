@@ -8,10 +8,10 @@ So a few lines of codes are added to realize such function.
 
 ## What's multiview test
 
-Training a CNN could be very tricky. For example, in the task of object classification, an effective trick is training with transformed data --- in every epoch, each training image only feeds the net with a small patch of itself(which is called cropping) and the patch might also be transformed as its horizontal reflection since objects in the mirror can be easily recogonized by human. Various transformed data helps relieve overfitting during training.
-<img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multi_view_pic1.png" style="width:350px;">
+Training a CNN could be very tricky. For example, in the task of object classification, an effective trick is training with transformed data --- in every epoch, each training image only feeds the net with a small patch of itself(which is called cropping) and the patch might also be transformed as its horizontal reflection since objects in the mirror can be easily recogonized by human. Various transformed data helps relieve overfitting of tradition BP training.
+<img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multiview_origin_pic0.png">
 
-Like 
+As shown in the picture above, transformed patch is randomly generated(both the Offset_Y and Offset_X are random numbers, the random patch is mirrored by a probability of 0.5)
 
 
 
