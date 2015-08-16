@@ -59,7 +59,7 @@ layer {
 <pre><code>
 TOOLS=../../build/tools
 
-    $TOOLS/caffe *multi_view_test* \
+    $TOOLS/caffe <strong>multi_view_test</strong> \
     --model=cifar10_quick_train_test.prototxt \
     --weights=cifar10_quick_iter_140000.caffemodel \
     --class_num=10 \
