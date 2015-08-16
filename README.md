@@ -84,7 +84,7 @@ transform_param {
     <strong>multi_view:false</strong>
 }
 </code></pre>
-The setting up above won't affect normal training and testing.
+The setting up above won't affect normal training&testing and the rest work is done by the scripts.
 
 Unfinished
 
