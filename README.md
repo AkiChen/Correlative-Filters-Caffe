@@ -22,7 +22,7 @@ In most cases, the multiview test performs better than only testing on the cente
 
 You need to edit your model definition at two places as below, you can check the `cifar10_quick_train_test.prototxt` in `examples\cifar10` for an example. It is also recommended to save your labels of test dataset in a file called `label_test_file`.
 
-[1] Add one line in the `transform_param` of your data input layer : 
+\1. Add one line in the `transform_param` of your data input layer : 
 
 <pre><code>
 transform_param { 
@@ -32,7 +32,7 @@ transform_param {
 }
 </code></pre>
 
-[2] Add a layer that takes the label propability distribution as output. Its name should be *softmax*.
+\2. Add a layer that takes the label propability distribution as output. Its name should be *softmax*.
 
 <pre><code>
 layer {
@@ -44,13 +44,13 @@ layer {
 }
 </code></pre>
 
-[3] 'label_test_file' is a file which save all the labels in one line with type of int. Check the 'label_test_file' in `examples\cifar10` which saves 10,000 labels of all the testing samples.
+\3. 'label_test_file' is a file which save all the labels in one line with type of int. Check the 'label_test_file' in `examples\cifar10` which saves 10,000 labels of all the testing samples.
 
 <pre><code>
 3 8 8 0 6 6 1 6 3 1 0 9 5 7 9 8 5 ...
 </code></pre>
 
-[4] Run a command like below : 
+\4. Run a command like below : 
 
 <pre><code>
 TOOLS=../../build/tools
