@@ -23,9 +23,14 @@ In most cases, the multiview test performs better than only testing on the cente
 You need to edit your model definition at two places. Check the `cifar10_quick_train_test.prototxt` in `examples\cifar10`.
 
 1. Add one line in the `transform_param` of your data input layer: 
+
 <pre>
 <code>
-    1231
+    transform_param { 
+        mean_file: "mean.binaryproto" 
+        crop_size: 30 
+        <strong>multi_view:true</strong>
+    }
 </code>
 </pre>
     
