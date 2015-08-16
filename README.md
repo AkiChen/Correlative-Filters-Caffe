@@ -70,7 +70,7 @@ TOOLS=../../build/tools
 </code></pre>
 In which: `--model` means the model definition, `--weights` means the trained net, `--class_num` means the total kinds of samples, `--iterations` means the number of iterations needed to test all the samples(for cifar10 with test batch 100,it's 100), `--outfile_name` is up to your choice, `--gpu` is the gpu id you want to test on, `--use_mirror` is whether you would like to test on mirror patches( so you might test on 5 or 10 patches)
 
-5.Testing with scripts
+6.Testing with scripts
 
 The testing procedure above is too complex for me, so I write `edit_model.py` and `test_multi_view.sh` in `examples\cifar10` to simply test with 
 <pre><code>
