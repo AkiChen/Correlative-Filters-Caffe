@@ -72,7 +72,7 @@ In which: `--model` means the model definition, `--weights` means the trained ne
 
 5.Testing with scripts
 
-The testing procedure above is too complex for me, so I write `edit_model.py` and `test_multi_view.sh` to simply test with 
+The testing procedure above is too complex for me, so I write `edit_model.py` and `test_multi_view.sh` in `examples\cifar10` to simply test with 
 <pre><code>
 ./test_multi_viwe.sh quick 140000
 </code></pre>
