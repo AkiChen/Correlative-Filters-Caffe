@@ -24,16 +24,25 @@ You need to edit your model definition at two places. Check the `cifar10_quick_t
 
 1. Add one line in the `transform_param` of your data input layer: 
 
-<pre>
-<code>
-    transform_param { 
-        mean_file: "mean.binaryproto" 
-        crop_size: 30 
-        <strong>multi_view:true</strong>
-    }
-</code>
-</pre>
-    
+<pre><code>
+transform_param { 
+    mean_file: "mean.binaryproto" 
+    crop_size: 30 
+    <strong>multi_view:true</strong>
+}
+</code></pre>
+
+2. Add a layer that takes the label propability distribution as output. Its name should be *softmax*.
+
+<pre><code>
+layer {
+    name: "softmax" 
+    type: "Softmax" 
+    bottom: "ip2" 
+    top: "softmax" 
+    include { phase: TEST } 
+}
+</code></pre>
 
 
 Unfinished
