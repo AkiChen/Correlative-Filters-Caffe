@@ -18,7 +18,16 @@ The input transformed data of CNN in train&test phase is shown in the graph abov
 
 In most cases, the multiview test performs better than only testing on the center patch and the improvement depends mainly on the cropping size that the more you crop on the corner, the more significant enhancement you will gain with multiview testing.
 
+## How to use
 
+You need to edit your model definition at two places. Check the `cifar10_quick_train_test.prototxt` in `examples\cifar10`.
+
+1. Add one line in the `transform_param` of your data input layer: 
+<code>
+cd $CAFFE_ROOT
+./data/cifar10/get_cifar10.sh
+./examples/cifar10/create_cifar10.sh
+</code>
 
 
 Unfinished

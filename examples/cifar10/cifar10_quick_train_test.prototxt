@@ -8,10 +8,12 @@ layer {
     phase: TRAIN
   }
   transform_param {
-    mean_file: "examples/cifar10/mean.binaryproto"
+    mean_file: "mean.binaryproto"
+    crop_size: 28
+    mirror: true
   }
   data_param {
-    source: "examples/cifar10/cifar10_train_lmdb"
+    source: "cifar10_train_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -25,10 +27,12 @@ layer {
     phase: TEST
   }
   transform_param {
-    mean_file: "examples/cifar10/mean.binaryproto"
+    mean_file: "mean.binaryproto"
+    crop_size: 28
+    multi_view: true
   }
   data_param {
-    source: "examples/cifar10/cifar10_test_lmdb"
+    source: "cifar10_test_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -219,4 +223,11 @@ layer {
   bottom: "ip2"
   bottom: "label"
   top: "loss"
+}
+layer {
+  name: "softmax"
+  type: "Softmax"
+  bottom: "ip2"
+  top:"softmax"
+  include {phase:TEST}
 }
