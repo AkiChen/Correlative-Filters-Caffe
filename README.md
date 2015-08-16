@@ -22,7 +22,7 @@ In most cases, the multiview test performs better than only testing on the cente
 
 You need to edit your model definition at two places. Check the `cifar10_quick_train_test.prototxt` in `examples\cifar10`.
 
-1. Add one line in the `transform_param` of your data input layer: 
+1.Add one line in the `transform_param` of your data input layer : 
 
 <pre><code>
 transform_param { 
@@ -32,7 +32,7 @@ transform_param {
 }
 </code></pre>
 
-2. Add a layer that takes the label propability distribution as output. Its name should be *softmax*.
+2.Add a layer that takes the label propability distribution as output. Its name should be *softmax*.
 
 <pre><code>
 layer {
