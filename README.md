@@ -16,6 +16,8 @@ The input transformed data of CNN in train&test phase is shown in the graph abov
 
 <img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multiview_origin_pic1.png">
 
+In most cases, the multiview test performs better than only testing on the center patch and the improvement depends mainly on the cropping size that the more you crop on the corner, the more significant enhancement you will gain with multiview testing.
+
 
 
 
