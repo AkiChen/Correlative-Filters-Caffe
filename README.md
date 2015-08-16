@@ -23,11 +23,11 @@ In most cases, the multiview test performs better than only testing on the cente
 You need to edit your model definition at two places. Check the `cifar10_quick_train_test.prototxt` in `examples\cifar10`.
 
 1. Add one line in the `transform_param` of your data input layer: 
-<code>
-cd $CAFFE_ROOT
-./data/cifar10/get_cifar10.sh
-./examples/cifar10/create_cifar10.sh
-</code>
+
+    cd $CAFFE_ROOT
+    ./data/cifar10/get_cifar10.sh
+    ./examples/cifar10/create_cifar10.sh
+    
 
 
 Unfinished
