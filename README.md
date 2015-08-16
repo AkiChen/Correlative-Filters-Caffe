@@ -12,7 +12,10 @@ Training a CNN could be very tricky. For example, in the task of object classifi
 
 <img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multiview_origin_pic0.png">
 
-The input transformed data of CNN in train&test phase is shown in the graph above. As the size of training patch is decided, transformed patch is randomly generated (both the Offset_Y and Offset_X are random numbers, the random patch is mirrored by a probability of 0.5).
+The input transformed data of CNN in train&test phase is shown in the graph above. Once the size of training patch is decided, transformed patch is randomly generated (both the Offset_Y and Offset_X are random numbers, the random patch is mirrored by a probability of 0.5). The training phase of caffe and cuda-convnet are almost the same when applied with cropping&mirror and both of them take the center patch of image in testing by default. Nevertheless an alternate testing method is also adopted in cuda-convnet: each sample would generate 10 different patches that its final prediction of label is acuqired by averaging the testing result of ten transformed patches as below.
+
+<img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multiview_origin_pic1.png">
+
 
 
 
