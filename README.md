@@ -12,7 +12,11 @@ Training a CNN could be very tricky. For example, in the task of object classifi
 
 <img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multiview_origin_pic0.png">
 
-The input transformed data of CNN in train&test phase is shown in the graph above. Once the size of training patch is decided, transformed patch is randomly generated (both the Offset_Y and Offset_X are random numbers, the random patch is mirrored by a probability of 0.5). The training phase of caffe and cuda-convnet are almost the same when applied with cropping&mirror and both of them take the center patch of image in testing by default. Nevertheless an alternate testing method is also adopted in cuda-convnet: each sample would generate 10 different patches that its final prediction of label is acuqired by averaging the testing result of ten transformed patches as below.
+The input transformed data of CNN in train&test phase is shown in the graph above. Once the size of training patch is decided, transformed patch is randomly generated (both the Offset_Y and Offset_X are random numbers, the random patch is mirrored by a probability of 0.5). 
+
+The training phase of caffe and cuda-convnet are almost the same when applied with cropping&mirror and both of them take the center patch of image in testing by default. 
+
+Nevertheless an alternate testing method is also adopted in cuda-convnet: each sample would generate 10 different patches that its final prediction of label is acuqired by averaging the testing result of ten transformed patches as below.
 
 <img src="https://raw.githubusercontent.com/AkiChen/Multiview-Caffe/master/pictures/multiview_origin_pic1.png">
 
@@ -44,7 +48,7 @@ layer {
 }
 </code></pre>
 
-3.'label_test_file' is a file which save all the labels in one line with type of int. Check the 'label_test_file' in `examples\cifar10` which saves 10,000 labels of all the testing samples.
+3.'label_test_file' is a file which saves all the labels in one line with type of int. Check the 'label_test_file' in `examples\cifar10` which saves 10,000 labels of all the testing samples.
 
 <pre><code>
 3 8 8 0 6 6 1 6 3 1 0 9 5 7 9 8 5 ...
@@ -55,7 +59,7 @@ layer {
 <pre><code>
 TOOLS=../../build/tools
 
-    $TOOLS/caffe multi_view_test \
+    $TOOLS/caffe *multi_view_test* \
     --model=cifar10_quick_train_test.prototxt \
     --weights=cifar10_quick_iter_140000.caffemodel \
     --class_num=10 \
@@ -64,7 +68,7 @@ TOOLS=../../build/tools
     --gpu=1 \
     --use_mirror=true
 </code></pre>
-In which: `--model` means the model definition, `--weights` means the trained net, `--class_num` means the total kinds of samples, `--iterations` means the number of iterations needed to test all the samples(for cifar10 it's 100), `--outfile_name` is up to your choice, `--gpu` is the gpu id you want to test on, `--use_mirror` is whether you would like to test on mirror patches( so you might train on 5 or 10 patches)
+In which: `--model` means the model definition, `--weights` means the trained net, `--class_num` means the total kinds of samples, `--iterations` means the number of iterations needed to test all the samples(for cifar10 with test batch 100,it's 100), `--outfile_name` is up to your choice, `--gpu` is the gpu id you want to test on, `--use_mirror` is whether you would like to test on mirror patches( so you might test on 5 or 10 patches)
 
 
 
