@@ -70,6 +70,26 @@ TOOLS=../../build/tools
 </code></pre>
 In which: `--model` means the model definition, `--weights` means the trained net, `--class_num` means the total kinds of samples, `--iterations` means the number of iterations needed to test all the samples(for cifar10 with test batch 100,it's 100), `--outfile_name` is up to your choice, `--gpu` is the gpu id you want to test on, `--use_mirror` is whether you would like to test on mirror patches( so you might test on 5 or 10 patches)
 
+5.Result
+
+If you have the `label_test_file` in the executing path, the averaged accuracy would be printed, or you have to compute the final average label with scores saved in files like outfile_'outfile_name'_left_top_corner.
+<pre><code>
+I0818 13:59:46.009418 32112 caffe.cpp:346] Each run is testing for 100 iterations.
+I0818 13:59:46.013913 32112 caffe.cpp:379] Right now, the input sample is transformed as left_top_corner
+I0818 13:59:53.431879 32112 caffe.cpp:379] Right now, the input sample is transformed as right_top_corner
+I0818 14:00:00.617496 32112 caffe.cpp:379] Right now, the input sample is transformed as center
+I0818 14:00:07.809696 32112 caffe.cpp:379] Right now, the input sample is transformed as left_bot_corner
+I0818 14:00:15.003214 32112 caffe.cpp:379] Right now, the input sample is transformed as right_bot_corner
+I0818 14:00:22.489519 32112 caffe.cpp:379] Right now, the input sample is transformed as left_top_corner_m
+I0818 14:00:30.241361 32112 caffe.cpp:379] Right now, the input sample is transformed as right_top_corner_m
+I0818 14:00:38.206393 32112 caffe.cpp:379] Right now, the input sample is transformed as center_m
+I0818 14:00:46.335206 32112 caffe.cpp:379] Right now, the input sample is transformed as left_bot_corner_m
+I0818 14:00:54.460909 32112 caffe.cpp:379] Right now, the input sample is transformed as right_bot_corner_m
+I0818 14:01:02.601949 32112 caffe.cpp:430] For each saved loss file, there are 1000000 scores
+I0818 14:01:07.750748 32112 caffe.cpp:462] Load in origin labels.
+I0818 14:01:07.753285 32112 caffe.cpp:481] The averaged accuracy is 0.661
+</code></pre>
+
 6.Testing with scripts
 
 The testing procedure above is too complex for me, so I write `edit_model.py` and `test_multi_view.sh` in `examples\cifar10` to simply test with 
@@ -86,7 +106,6 @@ transform_param {
 </code></pre>
 The setting up above won't affect normal training&testing and the rest work is done by the scripts.
 
-Unfinished
 
 
 
