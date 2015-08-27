@@ -335,15 +335,15 @@ int multi_view_test() {
 
   view_table.insert(std::pair<int,std::string>(1,"left_top_corner"));
   view_table.insert(std::pair<int,std::string>(2,"right_top_corner"));
-  view_table.insert(std::pair<int,std::string>(3,"center"));
-  view_table.insert(std::pair<int,std::string>(4,"left_bot_corner"));
-  view_table.insert(std::pair<int,std::string>(5,"right_bot_corner"));
+  view_table.insert(std::pair<int,std::string>(3,"left_bot_corner"));
+  view_table.insert(std::pair<int,std::string>(4,"right_bot_corner"));
+  view_table.insert(std::pair<int,std::string>(5,"center"));
   if(FLAGS_use_mirror == "true") {
     view_table.insert(std::pair<int,std::string>(6,"left_top_corner_m"));
     view_table.insert(std::pair<int,std::string>(7,"right_top_corner_m"));
-    view_table.insert(std::pair<int,std::string>(8,"center_m"));
-    view_table.insert(std::pair<int,std::string>(9,"left_bot_corner_m"));
-    view_table.insert(std::pair<int,std::string>(10,"right_bot_corner_m"));  
+    view_table.insert(std::pair<int,std::string>(8,"left_bot_corner_m"));
+    view_table.insert(std::pair<int,std::string>(9,"right_bot_corner_m"));
+    view_table.insert(std::pair<int,std::string>(10,"center_m"));
   }
   
   int total_score_num = 0;
