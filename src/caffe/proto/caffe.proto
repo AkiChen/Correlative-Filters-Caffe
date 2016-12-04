@@ -334,7 +334,7 @@ message LayerParameter {
   // backpropagation to those inputs is forced; if set false for some inputs,
   // backpropagation to those inputs is skipped.
   //
-  // The size must be either 0 or equal to the number of bottoms.
+  // The size must be either 0 or equal to the number of Fbottoms.
   repeated bool propagate_down = 11;
 
   // Rules controlling whether and when a layer is included in the network,
@@ -403,6 +403,24 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+
+  //Parameter for correlative filters
+  optional CorrelativeFiltersParameter correlative_filters_param = 147;
+}
+
+//Message that stores parameters used in correlative filters
+message CorrelativeFiltersParameter {
+
+  //static correlation
+  optional uint32 opposite_num = 1; //The number of opposite filters
+  optional uint32 translation_horizon_num = 2; //The number of horizontal batches for each output feature
+  optional uint32 translation_vertical_num = 3; //The number of vertical batches for each output feature
+  optional uint32 rotate_num = 4; //The number of rotate filters per output feature
+  optional uint32 scale_num = 5; //The number of scale filters per output feature
+  optional string scale_trans_source = 6; //The file which saves the transform matrix of scale convolution, *.txt usually
+  
+  //parametric correlation
+  optional uint32 param_cf_num = 9; //The paramatic correlative filters, use the similar procedure of scale_translation
 }
 
 // Message that stores parameters used to apply transformation
