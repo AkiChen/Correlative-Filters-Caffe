@@ -180,6 +180,9 @@ void BaseConvolutionLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   weight_offset_ = conv_out_channels_ * kernel_dim_ / group_;
   // Propagate gradients to the parameters (as directed by backward pass).
   this->param_propagate_down_.resize(this->blobs_.size(), true);
+
+  // The special setup is made for correlative filters
+  SpecialSetup();
 }
 
 template <typename Dtype>

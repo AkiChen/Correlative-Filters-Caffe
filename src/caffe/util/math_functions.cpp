@@ -104,6 +104,24 @@ template void caffe_copy<unsigned int>(const int N, const unsigned int* X,
 template void caffe_copy<float>(const int N, const float* X, float* Y);
 template void caffe_copy<double>(const int N, const double* X, double* Y);
 
+template<>
+void caffe_stride_copy<float>(const int N, const float* X, float* Y, const int Stride_X, const int Stride_Y) {
+  cblas_scopy(N, X, Stride_X, Y, Stride_Y);
+}
+
+template<>
+void caffe_stride_copy<double>(const int N, const double* X, double* Y, const int Stride_X, const int Stride_Y) {
+  cblas_dcopy(N, X, Stride_X, Y, Stride_Y);
+}
+
+template <>
+void caffe_stride_axpy<float>(const int N, const float alpha, const float* X,
+    float* Y, const int Stride_X, const int Stride_Y) { cblas_saxpy(N, alpha, X, Stride_X, Y, Stride_Y); }
+
+template <>
+void caffe_stride_axpy<double>(const int N, const double alpha, const double* X,
+    double* Y, const int Stride_X, const int Stride_Y) { cblas_daxpy(N, alpha, X, Stride_X, Y, Stride_Y); }
+
 template <>
 void caffe_scal<float>(const int N, const float alpha, float *X) {
   cblas_sscal(N, alpha, X, 1);

@@ -11,6 +11,28 @@
 namespace caffe {
 
 template <>
+void caffe_gpu_stride_copy<float>(const int N, const float* X, float* Y, const int Stride_X, const int Stride_Y) {
+  CUBLAS_CHECK(cublasScopy(Caffe::cublas_handle(), N, X, Stride_X, Y, Stride_Y));
+}
+
+template <>
+void caffe_gpu_stride_copy<double>(const int N, const double* X, double* Y, const int Stride_X, const int Stride_Y) {
+  CUBLAS_CHECK(cublasDcopy(Caffe::cublas_handle(), N, X, Stride_X, Y, Stride_Y));
+}
+
+template <>
+void caffe_gpu_stride_axpy<float>(const int N, const float alpha, const float* X,
+    float* Y, const int Stride_X, const int Stride_Y) {
+  CUBLAS_CHECK(cublasSaxpy(Caffe::cublas_handle(), N, &alpha, X, Stride_X, Y, Stride_Y));
+}
+
+template <>
+void caffe_gpu_stride_axpy<double>(const int N, const double alpha, const double* X,
+    double* Y, const int Stride_X, const int Stride_Y) {
+  CUBLAS_CHECK(cublasDaxpy(Caffe::cublas_handle(), N, &alpha, X, Stride_X, Y, Stride_Y));
+}
+
+template <>
 void caffe_gpu_gemm<float>(const CBLAS_TRANSPOSE TransA,
     const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
     const float alpha, const float* A, const float* B, const float beta,
