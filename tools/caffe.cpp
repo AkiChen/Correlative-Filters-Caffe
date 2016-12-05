@@ -51,6 +51,12 @@ DEFINE_string(weights, "",
     "separated by ','. Cannot be set simultaneously with snapshot.");
 DEFINE_int32(iterations, 50,
     "The number of iterations to run.");
+DEFINE_string(sigint_effect, "stop",
+             "Optional; action to take when a SIGINT signal is received: "
+              "snapshot, stop or none.");
+DEFINE_string(sighup_effect, "snapshot",
+             "Optional; action to take when a SIGHUP signal is received: "
+             "snapshot, stop or none.");
 
 //aki_update_start
 //these are flags which are needed in multi-view test
@@ -60,14 +66,7 @@ DEFINE_string(outfile_name, "",
     "The name output file");
 DEFINE_string(use_mirror, "",
     "use mirror or not in multiview");
-//aki_update_start
-
-DEFINE_string(sigint_effect, "stop",
-             "Optional; action to take when a SIGINT signal is received: "
-              "snapshot, stop or none.");
-DEFINE_string(sighup_effect, "snapshot",
-             "Optional; action to take when a SIGHUP signal is received: "
-             "snapshot, stop or none.");
+//aki_update_end
 
 
 // A simple registry for caffe commands.
@@ -442,11 +441,14 @@ int multi_view_test() {
   CHECK_GT(FLAGS_weights.size(), 0) << "Need a _iter_XXX.caffemodel to set weight. use --weights= ";
   CHECK_GT(FLAGS_class_num, 0) << "Need the number of classes. use --class_num= ";
   CHECK_GT(FLAGS_outfile_name.size(), 0) << "Need the prefix of ouput loss files. use --outfile_name= ";
+  //OK, let's get our gpus
+  vector<int> gpus;
+  get_gpus(&gpus);
 
   // Set device id and mode
-  if (FLAGS_gpu >= 0) {
-    LOG(INFO) << "Use GPU with device ID " << FLAGS_gpu;
-    Caffe::SetDevice(FLAGS_gpu);
+  if (gpus.size() > 0) {
+    LOG(INFO) << "Use GPU with device ID " << gpus[0];
+    Caffe::SetDevice(gpus[0]);
     Caffe::set_mode(Caffe::GPU);
   } else {
     LOG(INFO) << "Use CPU.";
@@ -609,7 +611,8 @@ int main(int argc, char** argv) {
       "  train           train or finetune a model\n"
       "  test            score a model\n"
       "  device_query    show GPU diagnostic information\n"
-      "  time            benchmark model execution time");
+      "  time            benchmark model execution time\n"
+      "  multi_view_test ten_view_test for image classification");
   // Run tool or show usage.
   caffe::GlobalInit(&argc, &argv);
   if (argc == 2) {
