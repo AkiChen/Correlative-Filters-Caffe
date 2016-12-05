@@ -488,7 +488,7 @@ int multi_view_test() {
     float loss = 0;
 
     std::ofstream outfile((std::string("outfile_")+FLAGS_outfile_name+"_"+current_view->second).c_str());
-    int index = 0;
+    
     std::ofstream tmp_cache(std::string("multiview_cache").c_str());
     tmp_cache << current_view->first;
     LOG(INFO) <<"Right now, the input sample is transformed as "<<current_view->second;
