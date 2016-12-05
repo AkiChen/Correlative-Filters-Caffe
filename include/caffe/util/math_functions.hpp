@@ -30,11 +30,18 @@ void caffe_axpy(const int N, const Dtype alpha, const Dtype* X,
     Dtype* Y);
 
 template <typename Dtype>
+void caffe_stride_axpy(const int N, const Dtype alpha, const Dtype* X,
+    Dtype* Y, const int Stride_X, const int Stride_Y);
+
+template <typename Dtype>
 void caffe_cpu_axpby(const int N, const Dtype alpha, const Dtype* X,
     const Dtype beta, Dtype* Y);
 
 template <typename Dtype>
 void caffe_copy(const int N, const Dtype *X, Dtype *Y);
+
+template <typename Dtype>
+void caffe_stride_copy(const int N, const Dtype *X, Dtype *Y, const int Stride_X, const int Stride_Y);
 
 template <typename Dtype>
 void caffe_set(const int N, const Dtype alpha, Dtype *X);
@@ -147,6 +154,12 @@ void caffe_cpu_scale(const int n, const Dtype alpha, const Dtype *x, Dtype* y);
 // Decaf gpu gemm provides an interface that is almost the same as the cpu
 // gemm function - following the c convention and calling the fortran-order
 // gpu code under the hood.
+template <typename Dtype>
+void caffe_gpu_stride_copy(const int N, const Dtype *X, Dtype *Y, const int Stride_X, const int Stride_Y);
+
+template <typename Dtype>
+void caffe_gpu_stride_axpy(const int N, const Dtype alpha, const Dtype* X,  Dtype* Y, const int Stride_X, const int Stride_Y);
+
 template <typename Dtype>
 void caffe_gpu_gemm(const CBLAS_TRANSPOSE TransA,
     const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
