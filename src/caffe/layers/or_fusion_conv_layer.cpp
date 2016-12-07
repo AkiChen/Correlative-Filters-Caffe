@@ -31,13 +31,13 @@ template <typename Dtype>
 void ORfusionConvolutionLayer<Dtype>::MakeOppositeTable(){
   //For opposite CF, the Cross-Map connection is used.
   //serial number of master filters are saved in the opposite_table_
-  //each dependent filter is just right after its master
+  //each dependent filter is 1*channels after its master.
   int list_length = this->channels_ * opposite_num_;
   opposite_table_.resize(list_length);
   
   for(int i = 0; i < this->channels_; ++i)
     for(int j = 0; j < opposite_num_; ++j)
-      opposite_table_[i*opposite_num_ + j] = i*this->num_output_ + j*2;
+      opposite_table_[i*opposite_num_ + j] = i + 2*j*this->channels_;
 }
 
 template <typename Dtype>
@@ -50,7 +50,7 @@ void ORfusionConvolutionLayer<Dtype>::MakeRotateTable(){
   
   for(int i = 0; i < this->channels_; ++i)
     for(int j = 0; j < rotate_num_; ++j)
-      rotate_table_[i*rotate_num_ + j] = i*this->num_output_ + j*2 + 2*opposite_num_;
+      rotate_table_[i*rotate_num_ + j] = i + 2*(j+opposite_num_)*this->channels_;
 }
 
 template <typename Dtype>
@@ -147,14 +147,15 @@ void ORfusionConvolutionLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& t
 
   //#1 For opposite CF
   //each dependent filter feed its master with its own diff * (-1), 
+  int channels_tmp = this->channels_;
 
   for(int g = 0; g < opposite_num_*this->channels_; ++g){
     //Feed the master filters
-    caffe_axpy(filter_offset, (Dtype)(-1.), weight_diff + (1+opposite_table_[g])*filter_offset, weight_diff + opposite_table_[g]*filter_offset);
+    caffe_axpy(filter_offset, (Dtype)(-1.), weight_diff + (channels_tmp+opposite_table_[g])*filter_offset, weight_diff + opposite_table_[g]*filter_offset);
 
     //Update diff of dependent filters
-    caffe_copy(filter_offset, weight_diff + opposite_table_[g]*filter_offset, weight_diff + (1+opposite_table_[g])*filter_offset);
-    caffe_scal(filter_offset, (Dtype)(-1.), weight_diff + (1+opposite_table_[g])*filter_offset);
+    caffe_copy(filter_offset, weight_diff + opposite_table_[g]*filter_offset, weight_diff + (channels_tmp+opposite_table_[g])*filter_offset);
+    caffe_scal(filter_offset, (Dtype)(-1.), weight_diff + (channels_tmp+opposite_table_[g])*filter_offset);
   }
 
   //#2 For rotary CF
@@ -163,7 +164,7 @@ void ORfusionConvolutionLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& t
 
   for(int g=0; g < rotate_num_*this->channels_; ++g){
     Dtype* original_pointer = weight_diff + rotate_table_[g]*filter_offset;
-    Dtype* right_rotate_pointer = weight_diff + (rotate_table_[g]+1)*filter_offset;
+    Dtype* right_rotate_pointer = weight_diff + (rotate_table_[g]+channels_tmp)*filter_offset;
 
     //first step: Feed the original master filter
     for(int g2=1; g2 <= kernel_size_; ++g2)
