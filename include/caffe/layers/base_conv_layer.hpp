@@ -157,6 +157,8 @@ class BaseConvolutionLayer : public Layer<Dtype> {
   }
 #endif
 
+ protected:
+
   int num_kernels_im2col_;
   int num_kernels_col2im_;
   int conv_out_channels_;
