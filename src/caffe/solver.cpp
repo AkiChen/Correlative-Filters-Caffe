@@ -403,6 +403,40 @@ void Solver<Dtype>::Test(const int test_net_id) {
     }
     LOG(INFO) << "    Test net output #" << i << ": " << output_name << " = "
               << mean_score << loss_msg_stream.str();
+    string result_name = "Total_Result.txt";
+
+    if (iter_%500 == 0)
+    {
+      LOG(INFO) << "Catch the testing iteration" ;
+      std::vector<float> accuracy_buffer;
+      std::ifstream in_stream(result_name.c_str());
+      if(in_stream)
+      {
+        float a = 0.0;
+        while( in_stream>>a )
+          accuracy_buffer.push_back(a);
+
+        in_stream.close();
+      }
+      accuracy_buffer.push_back(test_score[0] / param_.test_iter(test_net_id));
+      std::ofstream out_stream(result_name.c_str());
+      for(int k = 0; k < accuracy_buffer.size(); ++k)
+        out_stream<<accuracy_buffer[k]<<" ";
+      out_stream.close();
+
+      std::FILE *fp;
+      if( (fp = fopen("sub_Total_result.txt", "a+")) )
+      {
+        fprintf(fp, "%d: %f\n",iter_,test_score[0] / param_.test_iter(test_net_id));
+        fclose(fp);
+      }
+      else
+      {
+        fp = fopen("sub_Total_result.txt", "w");
+        fprintf(fp, "%d: %f\n",iter_,test_score[0] / param_.test_iter(test_net_id));
+        fclose(fp);
+      }
+    }
   }
 }
 
