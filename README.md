@@ -35,7 +35,7 @@ Based on this thought, it is reasonable to design a more optimized architecture 
 #### Collaboration in Biological Visual Systems
 In the very early stage of primate subcortical vision systems, there exist cells with center-surround receptive fields which come into two types: one is sensitive to bright spot on dark background whereas the other focuses on the inverse pattern. They are  believed to help extract visual patterns under variant luminance, as shown in figure. 1.
 
-<img src="https://github.com/AkiChen/Multiview-Caffe/raw/Correlative-Filters/doc_images/1.jpg" style="width:400px;">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/1.jpg" style="width:400px;">
 **Figure.1**  Center-surround receptive fields sensitive to opposite patterns
 
 #### Collaboration in CNN
