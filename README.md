@@ -31,7 +31,7 @@ Based on this thought, it is reasonable to design a more optimized architecture 
 #### Collaboration in Biological Visual Systems
 In the very early stage of primate subcortical vision systems, there exist cells with center-surround receptive fields which come into two types: one is sensitive to bright spot on dark background whereas the other focuses on the inverse pattern. They are  believed to help extract visual patterns under variant luminance, as shown in figure. 1.
 
-<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/1.jpg" style="width:400px;">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/1.jpg" width="50%">
 **Figure.1**  Center-surround receptive fields sensitive to opposite patterns
 
 #### Collaboration in CNN
@@ -55,15 +55,7 @@ To simulate the collaboration discovered, we designed four kinds of static corre
 
 The forward pass of SCF is exact the same with normal convolutional layers and the flow chart of back-propagation is as followed.
 
-```sequence
-Dependent->Dependent: Compute own weights' diff
-Master->Master: Compute own weights' diff
-Dependent->Master: Feed diff to its master
-Note right of Master: Compute diff of the whole pair
-Master->Dependent: Refine the dependent's diff
-Note right of Master: Update master weight
-Note right of Dependent: Update dependent weight
-```
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/4.png" style="width:600px;">
 **Figure 4**. Back-propagation of SCFs.
 
 ####  Parametric Correlative Filters
