@@ -52,13 +52,13 @@ According to the observation above, we came up with the idea to realize those re
 #### Static Correlative Filters
 To simulate the collaboration discovered, we designed four kinds of static correlative filters, in which each pair of master filter and dependent filter are predefined to have a static relationship, as explained in figure. 3.
 
-<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/3.png" width="90%">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/3.png" width="70%">
 
 **Figure 3**. Illustration of the proposed four kinds of SCFs.
 
 The forward pass of SCF is exact the same with normal convolutional layers and the flow chart of back-propagation is as followed.
 
-<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/4.png" width="90%">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/4.png" width="70%">
 
 **Figure 4**. Back-propagation of SCFs.
 
