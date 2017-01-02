@@ -12,11 +12,7 @@ Generally speaking, CF introduces a series of revised **2D convolutional layers*
 The primitive version of CF, including opposite CF and translational CF, has been published on the conference [SMC 2015](http://ieeexplore.ieee.org/document/7379661/). 
 The revised version has been accepted by the journal of [IEEE Transcation on Cybernetics](http://ieeexplore.ieee.org/document/7782341/), in which SCF(Static Correlative Filters) and PCF(Parametric Correlative Filters) are introduced.
 
-*Noted that the ten-view-test is also included in this repo. For documentation of the **Multiview test in Caffe**, please refer to the branch named **old_multiview_caffe**. *
-
-----------
-
-[TOC]
+*Noted that the ten-view-test is also included in this repo. For documentation of the **Multiview test in Caffe**, please refer to the branch named **old_multiview_caffe**.*
 
 ## Introducing Correlative Filters
 > In this part, we mainly talks about the **motivation** and **workflow** of the proposed CF method. 
@@ -41,7 +37,7 @@ In the very early stage of primate subcortical vision systems, there exist cells
 #### Collaboration in CNN
 As multiple filters have always been recognized as receptive fields of CNN, we visualize the filter banks of a **normally trained network** to examine whether the similar phenomenon occurs, as illustrated in figure. 2.
 
-<img src="https://github.com/AkiChen/Multiview-Caffe/raw/Correlative-Filters/doc_images/2.png" style="width:600px;">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/2.png" style="width:600px;">
 **Figure.2** Illustration of the observed relations between normally trained filters.
 
 We found four kinds of relationship. Note that all the weights of filters are randomly initialized with Gaussian distribution and trained freely with stochastic gradient descent, hence these observed relations indicate the cooperation of correlated filters benefits for extracting visual features.
@@ -54,7 +50,7 @@ According to the observation above, we came up with the idea to realize those re
 #### Static Correlative Filters
 To simulate the collaboration discovered, we designed four kinds of static correlative filters, in which each pair of master filter and dependent filter are predefined to have a static relationship, as explained in figure. 3.
 
-<img src="https://github.com/AkiChen/Multiview-Caffe/raw/Correlative-Filters/doc_images/3.png" style="width:600px;">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/3.png" style="width:600px;">
 **Figure 3**. Illustration of the proposed four kinds of SCFs.
 
 The forward pass of SCF is exact the same with normal convolutional layers and the flow chart of back-propagation is as followed.
@@ -73,7 +69,7 @@ Note right of Dependent: Update dependent weight
 ####  Parametric Correlative Filters
 Besides the proposed SCFs, there might exist other linear correlations that have not been observed intuitively. As an extension to SCF, we come up with the idea to construct trainable correlations by making the correlation matrix learnable during the network training, which leads to the proposed parametric correlative filter (PCF). An illustration about how to train the proposed PCF is presented in figure below.
 
-<img src="https://github.com/AkiChen/Multiview-Caffe/raw/Correlative-Filters/doc_images/5.jpg" style="width:600px;">
+<img src="https://github.com/AkiChen/Correlative-Filters-Caffe/raw/Correlative-Filters/doc_images/5.jpg" style="width:600px;">
 **Figure 5**. Illustration of training parametric correlative filters.
 
 ## Instructions for use
