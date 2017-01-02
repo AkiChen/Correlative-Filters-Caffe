@@ -12,7 +12,7 @@ Generally speaking, CF introduces a series of revised **2D convolutional layers*
 The primitive version of CF, including opposite CF and translational CF, has been published on the conference [SMC 2015](http://ieeexplore.ieee.org/document/7379661/). 
 The revised version has been accepted by the journal of [IEEE Transcation on Cybernetics](http://ieeexplore.ieee.org/document/7782341/), in which SCF(Static Correlative Filters) and PCF(Parametric Correlative Filters) are introduced.
 
-*Noted that the ten-view-test is also included in this repo. For documentation of the **Multiview test in Caffe**, please refer to the branch named **old_multiview_caffe**.*
+*Noted that the ten-view-test is also included in this repo*. For documentation of the **Multiview test in Caffe**, please refer to the branch named **old_multiview_caffe**.
 
 ## Introducing Correlative Filters
 > In this part, we mainly talks about the **motivation** and **workflow** of the proposed CF method. 
